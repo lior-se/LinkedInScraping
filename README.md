@@ -94,6 +94,30 @@ Since LinkedIn has rate limitations and really strict research,
 (For example, missing one letter and the user is not foundable anymore)
 we use duckduckGo HTML search since it rarely asks for CAPTCHA solving.
 
+Run with python main.py --src-dir SrcDir
+
+Options (what each flag adds/changes):
+
+```--src-dir PATH``` — where your source face images live. Default: Source
+
+```--persons-dir PATH``` — where per-person JSONs are written/loaded. Default: Persons_JSONS
+
+```--state PATH``` — Chromium/LinkedIn session state file. Default: login_state.json
+
+```--headless``` — run the browser headless (omit for a visible window).
+
+```--email EMAIL``` — LinkedIn login; falls back to LINKEDIN_EMAIL env var.
+
+```--password PASS``` — LinkedIn password; falls back to LINKEDIN_PASSWORD env var.
+
+```--max-pages INT``` — how many result pages to crawl. Default: 1
+
+```--scrape-delay FLOAT``` — delay between search page actions (seconds). Default: 1.0
+
+```--photos-delay FLOAT``` — delay between photo grabs (seconds). Default: 0.9
+
+```--output PATH``` — write final aggregated results here. Default: output.json
+
 ## 5) LLM disclosure
 
 I used an LLM to speed up routine coding tasks, drafting boilerplate, refining regex/selectors, tidying function signatures, and polishing docstrings.\
