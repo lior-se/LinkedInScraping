@@ -94,7 +94,8 @@ Since LinkedIn has rate limitations and really strict research,
 (For example, missing one letter and the user is not foundable anymore)
 we use duckduckGo HTML search since it rarely asks for CAPTCHA solving.
 
-Run with python main.py --src-dir SrcDir
+## Run :
+```python main.py --src-dir SrcDir```
 
 Options (what each flag adds/changes):
 
