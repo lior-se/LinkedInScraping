@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 
 NO_IMAGE_TOKEN = "no_image"  # sed to mark profiles without a usable picture
 
+
 # ========== core io ==========
 
 
@@ -15,6 +16,7 @@ def load_person(path: str | Path) -> Dict[str, Any]:
 def save_person(path: str | Path, data: Dict[str, Any]):
     """Write a person dict back to disk."""
     Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
 
 # ========== candidates indexing ==========
 
@@ -33,6 +35,7 @@ def get_candidate(data: Dict[str, Any], profile_url: str) -> Optional[Dict[str, 
     if idx == -1:
         return None
     return data["candidates"][idx]
+
 
 # ========== idempotency helpers ==========
 
@@ -62,28 +65,54 @@ def candidate_has_face(person_json: str | Path, profile_url: str) -> bool:
     c = get_candidate(data, profile_url)
     return bool(c and c.get("face"))
 
+
 # ========== mutators ==========
 
 
-def upsert_candidate(person_json: str | Path, profile_url: str, name: str) -> None:
+# utils/json_store.py
+from pathlib import Path
+
+
+def upsert_candidate(
+        person_json: str | Path,
+        profile_url: str,
+        name: str,
+        photo_path: str | Path | None = None,
+) -> None:
     """
-    Insert the candidate if missing; otherwise just update the name.
-    Does not touch photo/face fields.
+    Insert candidate if missing; otherwise update:
+      - name: overwrite only if the new name is non-empty
+      - photo_path: set only if photo_path is provided AND
+                    (no existing photo OR existing == NO_IMAGE_TOKEN)
+    Backward-compatible with old calls (photo_path is optional).
     """
     data = load_person(person_json)
     idx = _find_idx(data, profile_url)
+
     if idx == -1:
-        data.setdefault("candidates", []).append({
+        entry = {
             "profile_url": profile_url,
-            "name": name,
+            "name": name or "",
             "photo_url": None,
             "photo_path": None,
             "face": None,
             "name_similarity": None,
-            "match_type": None
-        })
+            "match_type": None,
+        }
+        if photo_path is not None:
+            entry["photo_path"] = str(photo_path)
+        data.setdefault("candidates", []).append(entry)
     else:
-        data["candidates"][idx]["name"] = name
+        entry = data["candidates"][idx]
+        if name:  # only overwrite if a non-empty name was provided
+            entry["name"] = name
+
+        if photo_path is not None:
+            # Only set photo if we don't already have a real one
+            existing = entry.get("photo_path")
+            if not existing or existing == NO_IMAGE_TOKEN:
+                entry["photo_path"] = str(photo_path)
+
     save_person(person_json, data)
 
 
@@ -120,6 +149,7 @@ def set_candidate_name_eval(person_json: str | Path, profile_url: str,
     data["candidates"][idx]["name_similarity"] = name_similarity
     data["candidates"][idx]["match_type"] = match_type
     save_person(person_json, data)
+
 
 # ========== selection ==========
 
