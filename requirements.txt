@@ -1,0 +1,6 @@
+playwright
+deepface
+tf-keras
+rapidfuzz
+Unidecode
+python-dotenv

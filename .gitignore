@@ -1,0 +1,8 @@
+﻿.env
+login_state.json
+Persons_JSONS/
+Persons_photos/
+__pycache__/
+.venv/
+.idea/
+HomeAssignment/
