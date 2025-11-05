@@ -1,5 +1,6 @@
-# main.py
-import argparse, json, os
+import argparse
+import json
+import os
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -14,26 +15,25 @@ from matcher import run_matcher
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Full pipeline. Default = Google Images thumbnails; use --full-pictures for LinkedIn login + max-size photos."
+        description="Full pipeline. Default = Google Images thumbnails;"
+                    " use --full-pictures for LinkedIn login + max-size photos."
     )
     ap.add_argument("--src-dir", default="Source")
     ap.add_argument("--persons-dir", default="Persons_JSONS")
-    ap.add_argument("--state", default="login_state.json")
     ap.add_argument("--headless", action="store_true")
 
     # Only needed for --full-pictures mode
-    ap.add_argument("--email", default=os.getenv("LINKEDIN_EMAIL", ""))
-    ap.add_argument("--password", default=os.getenv("LINKEDIN_PASSWORD", ""))
-
-    # (LinkedIn) flow controls
     ap.add_argument("--full-pictures", action="store_true",
                     help="Use LinkedIn login + scrape_links + full-size profile photos.")
+    ap.add_argument("--email", default=os.getenv("LINKEDIN_EMAIL", ""))
+    ap.add_argument("--password", default=os.getenv("LINKEDIN_PASSWORD", ""))
+    ap.add_argument("--state", default="login_state.json")
     ap.add_argument("--max-pages", type=int, default=1)
     ap.add_argument("--scrape-delay", type=float, default=1.0)
     ap.add_argument("--photos-delay", type=float, default=0.9)
 
     # (Google Images) flow controls
-    ap.add_argument("--gimages-limit", type=int, default=12,
+    ap.add_argument("--gimages-limit", type=int, default=10,
                     help="Max profiles to collect per person when using Google Images (default).")
 
     ap.add_argument("--output", default="output.json")
