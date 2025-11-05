@@ -69,9 +69,6 @@ def candidate_has_face(person_json: str | Path, profile_url: str) -> bool:
 # ========== mutators ==========
 
 
-# utils/json_store.py
-from pathlib import Path
-
 
 def upsert_candidate(
         person_json: str | Path,

@@ -1,5 +1,4 @@
 import re
-import time
 import base64
 import urllib.parse
 from pathlib import Path
@@ -9,9 +8,7 @@ from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 from utils.json_store import (
     load_person,
     upsert_candidate,
-    has_candidate,
     candidate_has_photo,
-    set_candidate_photo,
     NO_IMAGE_TOKEN,
 )
 
@@ -264,7 +261,8 @@ def scrape_linkedin_images_into_json(json_path: str | Path, *,
 def _cli():
     import argparse
     ap = argparse.ArgumentParser(
-        description="Find LinkedIn profiles & save base64 thumbnails from Google Images by forward DOM scan (no LinkedIn login, Python-only)."
+        description="Find LinkedIn profiles & save base64 thumbnails from Google Images"
+                    " by forward DOM scan."
     )
     ap.add_argument("json_path", help="Path to a person JSON (with query_name).")
     ap.add_argument("--headless", action="store_true")

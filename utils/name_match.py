@@ -16,8 +16,6 @@ def normalize_name(s: str) -> str:
 def name_similarity(a: str, b: str) -> float:
     """Compute name similarity between two names."""
     a, b = normalize_name(a), normalize_name(b)
-    if a == b:
-        return 100
     return float(fuzz.token_sort_ratio(a, b))
 
 
